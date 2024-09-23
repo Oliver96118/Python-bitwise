@@ -1,9 +1,11 @@
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+import decimal
 from decimal import Decimal, getcontext
 from math import *
 import sys
+import mpmath
 from mpmath import mp, log
 
 path = []
@@ -36,7 +38,7 @@ def calculate_exponent(file_path):
             start_coordinate_str = file.read().strip()
         
         # Increase the maximum number of digits for int conversion
-        sys.set_int_max_str_digits(218505 + 1)  # +1 to ensure the given number is not too low
+        sys.set_int_max_str_digits(220000)  # ensure the given number is not too low
         
         # Input start coordinate
         start_coordinate = int(start_coordinate_str)
@@ -49,14 +51,15 @@ def calculate_exponent(file_path):
             raise ValueError("The number must be positive.")
 
         # Calculate the exponent
-        exponent = log(start_coordinate, 2)
-
+        # exponent = log(start_coordinate, 2)
+        exponent = mpmath.log(start_coordinate) / mpmath.log(2)
+        # with open("Start-coordinate-exponent-original.txt", "w") as file:
+        #     file.write(f"{exponent}")
         # Verify if start_coordinate exactly a power of 2
         if 2 ** exponent != start_coordinate:
             print("The x-coordinate of start point is not an exact power of 2. So an accuracy may be a little down.")
         else:
             print("The x-coordinate of start point is an exact power of 2.")
-        
         return exponent
     
     except FileNotFoundError:
@@ -69,13 +72,17 @@ def calculate_exponent(file_path):
 def calculate_number_of_digits(exponent):
     # Calculate the number of digits
     # print("exponent", exponent)
+    print("Calculating integer coordinate...")
+    base = mp.mpf(2)
 
-    result = mp.power(2, exponent)
+    result = mp.power(base, exponent)
 
+    # Convert the result to an integer
+    integer_result = int(result)
     # Convert the result to string and remove any scientific notation
-    result_str = mp.nstr(result, mp.dps, strip_zeros=False)
+    # result_str = mp.nstr(result, mp.dps, strip_zeros=False)
     # print(result_str)
-    return result_str
+    return integer_result
 
 # Function to draw the triangle
 def draw_triangle(vertices, ax):
@@ -96,22 +103,22 @@ def traverse_top(a,c1,c2,y,ax):
     while(point<c2):
         n = n + 1
         if(point + step > c2):
-            deviation = c2 - round_mpf(point, 0)
+            deviation = c2 - int(point)
             next = point + deviation
         else:
             next = point + step
         point=next 
         y = y + step
-        path.append({"shape": "triangle", "equation": [f"x=2^{point}", "y=1", f"2^{y}*x+(2^{point}-2^{next})*y=2^({y}+{next})"]})
-        if(point > c2):
-            path.append("Terminate Point coordinate: 2^{}\n".format(next))
+        path.append({"shape": "triangle", "equation": [f"x=2^{round_mpf(point,10)}", "y=1", f"2^{y}*x+(2^{round_mpf(point,10)}-2^{round_mpf(next, 10)})*y=2^({y}+{round_mpf(next, 10)})"]})
+        if(point >= c2):
+            path.append("Terminate Point coordinate: 2^{}\n".format(round_mpf(next, 10)))
             path.append("Total repetitions: {}".format(n))
             write_json(path)
             with open("Deviatioin.txt", "w") as file:
                 file.write(f"{step - deviation}")
             with open("Terminate-coordinate-exponent.txt", "w") as file:
                 # file.write(f"Terminate Point coordinate: (2^{next}, 1)")
-                file.write(f"{next}")
+                file.write(f"{round_mpf(next, 10)}")
             with open("Terminate-coordinate-integer.txt", "w") as file:
                 file.write(f"{calculate_number_of_digits(next)}")
 
@@ -123,7 +130,7 @@ def traverse_down(start_point_x,c1,c2,y,ax):
     while(point>c1):
         n = n + 1
         if(point - step < c1):
-            print("convert_with_precision(point, 1)", int(point))
+            # print("convert_with_precision(point, 1)", int(point))
             deviation = int(point) - c1 + 1
             print("deviation", deviation)
             next = point - deviation
@@ -139,8 +146,8 @@ def traverse_down(start_point_x,c1,c2,y,ax):
             write_json(path)
             with open("Deviatioin.txt", "w") as file:
                 file.write(f"{deviation - step}")
-            with open("Term_For_Calc.txt", "w") as file:
-                file.write(f"{next}")
+            # with open("Term_For_Calc.txt", "w") as file:
+            #     file.write(f"{next}")
             with open("Terminate-coordinate-exponent.txt", "w") as file:
                 file.write(f"2^{convert_with_precision(next, 10)}")
             with open("Terminate-coordinate-integer.txt", "w") as file:
