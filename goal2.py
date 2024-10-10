@@ -9,8 +9,8 @@ import mpmath
 sys.set_int_max_str_digits(228505 + 1)  # +1 to ensure the given number is not too low
 
 path='Calc-Start-Coordinate.txt'
-direction=Decimal(input("Direction: If traverse down, input 1, traverse up -1 :"))
-total_repetition=int(input("Total repetitions:"))
+# direction=Decimal(input("Direction: If traverse down, input 1, traverse up -1 :"))
+# total_repetition=int(input("Total repetitions:"))
 y=0
 step=Decimal(750100./325)
 
@@ -115,6 +115,14 @@ def cal(n,b,y):
 
 with open(path, "w") as file:
     file.write("")
-end = cal(total_repetition,direction,y)
-draw(end)
-print("first point =>",f"2^{end}")
+# end = cal(total_repetition,direction,y)
+# draw(end)
+with open("terminate-coordinate.txt", "r") as file:
+    terminate_coordinate = int(file.read().strip())
+with open("pattern.json", "r") as file:
+    result_binary = int(file.read().strip())
+start_coordinate =  terminate_coordinate ^ result_binary
+
+with open(path, "w") as file:
+    file.write(f"{start_coordinate}")
+# print("first point =>",f"2^{start_coordinate}")
