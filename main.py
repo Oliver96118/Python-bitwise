@@ -89,12 +89,7 @@ def main():
     term_coor_exp = int(terminate_coordinate_exponent) + 1
 
     print("term_coor_exp",term_coor_exp)
-    # start_coordinate_binary = decimal_to_binary(start_coordinate)
-    # print("start_coordinate_binary", start_coordinate_binary)
-    # print(start_coordinate_binary[-term_coor_exp])
 
-    # result_binary = start_coordinate_binary[0:-term_coor_exp]
-    # print("bitwise", (start_coordinate ^ term_coor_int))
 
     result_binary = start_coordinate ^ term_coor_int
 
