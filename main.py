@@ -89,12 +89,7 @@ def main():
     term_coor_exp = int(terminate_coordinate_exponent) + 1
 
     print("term_coor_exp",term_coor_exp)
-    # start_coordinate_binary = decimal_to_binary(start_coordinate)
-    # print("start_coordinate_binary", start_coordinate_binary)
-    # print(start_coordinate_binary[-term_coor_exp])
 
-    # result_binary = start_coordinate_binary[0:-term_coor_exp]
-    # print("bitwise", (start_coordinate ^ term_coor_int))
 
     result_binary = start_coordinate ^ term_coor_int
 
@@ -102,10 +97,6 @@ def main():
 
     with open("terminate-coordinate.txt", "w") as file:
         file.write(f"{term_coor_int}")
-    # if 2 ** start_exponent != start_coordinate:
-    #     print("The x-coordinate of start point is not an exact power of 2. So an accuracy may be a little down.")
-    # else:
-    #     print("The x-coordinate of start point is an exact power of 2.")
 
     
 
