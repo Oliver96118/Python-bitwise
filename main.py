@@ -97,10 +97,6 @@ def main():
 
     with open("terminate-coordinate.txt", "w") as file:
         file.write(f"{term_coor_int}")
-    # if 2 ** start_exponent != start_coordinate:
-    #     print("The x-coordinate of start point is not an exact power of 2. So an accuracy may be a little down.")
-    # else:
-    #     print("The x-coordinate of start point is an exact power of 2.")
 
     
 
